@@ -1,0 +1,1 @@
+This repository was established as a storage space during my preparation for the "Meta Database Engineer" certification. Securing this certification mandates the acquisition of additional prerequisite certifications, among which "Database Clients" is included.
