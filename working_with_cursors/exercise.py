@@ -1,9 +1,12 @@
 # Import MySQL Connector/Python
 import mysql.connector as connector
+from mysql.connector import Error
+
 # Establish connection between Python and MySQL database via connector API
 connection=connector.connect(
                             user="root",
                             password="",
+                            database="little_lemon"
                             )
 ## Scenario: 
 
@@ -15,6 +18,15 @@ connection=connector.connect(
 # To access the names of the existing tables in the Little Lemon database, set the database `little_lemon` in use. Then, create a cursor object and execute `SHOW TABLES` to retrieve the names of the tables in the database. Fetch all the names in a variable and use the `for` loop to print the output.    
 
 # Add your code here
+# Add your code here
+try:
+    cursor = connection.cursor()
+    cursor.execute("SHOW TABLES")
+    tables = cursor.fetchall()
+    for (table_name) in tables:
+        print(table_name)
+except Error as e:
+    print("Error:", e)
 
 ## Task 2
 
@@ -29,6 +41,24 @@ connection=connector.connect(
 # * Execute `SELECT * FROM Bookings` 
 # * Execute `SELECT * FROM Orders` 
 # Add your code here
+try:
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM Bookings")
+    bookings = cursor.fetchall()
+    print("bookings", bookings)
+    for booking in bookings:
+        print(booking)
+    
+    cursor.execute("SELECT * FROM Orders")
+    orders = cursor.fetchall()
+    print("orders", orders)
+    for order in orders:
+        print(order)
+        
+    cursor.close()
+except Error as e:
+    print("Error with standard cursor:", e)
+    
 ## Task 3
 
 # Little Lemon will have multiple databases soon. They need to plan for a scalable solution.  This information can be tracked in a Python dictionary. A dictionary cursor will be helpful as it returns a dictionary object.  
@@ -37,3 +67,13 @@ connection=connector.connect(
 
 # **TIP:** Explore the arguments that you can pass to the cursor module. 
 # Add your code here
+# Add your code here
+try:
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("USE little_lemon")
+    cursor.execute("SHOW TABLES;")
+    tables = cursor.fetchall()
+    for table in tables:
+        print(table)
+except Error as e:
+    print("Error:", e)
