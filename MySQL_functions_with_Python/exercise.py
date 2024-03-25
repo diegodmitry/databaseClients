@@ -31,6 +31,22 @@ connection.database
 
 # TIP: Target `GuestFistName`, `GuestLastName` and combine them to get `GuestFullName`.  
 # Add your code here
+try:
+    sql_query_task1 = """
+    SELECT BookingID, UPPER(CONCAT(GuestFirstName, ' ', GuestLastName)) AS GuestFullName
+    FROM Bookings;
+    """
+
+    cursor.execute(sql_query_task1)
+    results_task1 = cursor.fetchall()
+
+    print("Guest Full Names in Upper Case:")
+    for result in results_task1:
+        print("BookingID:", result[0], "GuestFullName:", result[1])
+
+except mysql.connector.Error as e:
+    print(e)
+
 ## Task 2:
 
 # Little lemon needs to know the following statistics at closing: 
@@ -51,12 +67,51 @@ for result in results:
     print("Average sale:",result[2]) 
 # ```
 # Add your code here
+try:
+    sql_query = """
+    SELECT COUNT(DISTINCT BookingID) AS NumberOfBookings, SUM(BillAmount) AS TotalSale, AVG(BillAmount) AS AverageSale
+    FROM Orders;
+    """
+
+    cursor.execute(sql_query)
+
+    # Fetch and print results
+    results = cursor.fetchall()
+    print("Today's statistics:") 
+    for result in results: 
+        print("Number of bookings:", result[0]) 
+        print("Total sale:", result[1]) 
+        print("Average sale:", result[2])
+
+except mysql.connector.Error as e:
+    print(e)
+
 ## Task 3:
 
 # Little lemon needs to know the number of bookings for each table. Please help them to print the table number and the number of bookings for each table.  
 
 # **TIP:** Target `TableNo` column in the booking table, count the number of bookings for each table, and group the data. Print the results in descending order.  
 # Add your code here
+try:
+    sql_query_task3 = """
+    SELECT TableNo, COUNT(BookingID) AS NumberOfBookings
+    FROM Bookings
+    GROUP BY TableNo
+    ORDER BY NumberOfBookings DESC;
+    """
+
+    cursor.execute(sql_query_task3)
+    results_task3 = cursor.fetchall()
+
+    # Assuming you want to print the results for Task 3
+    print("Number of Bookings for Each Table:")
+    for result in results_task3:
+        print("TableNo:", result[0], "NumberOfBookings:", result[1])
+
+
+except mysql.connector.Error as e:
+    print(e)
+
 ## Task 4:
 
 # Little lemon wants to create three arrival slots for the guests based on the booking hour: 
@@ -69,3 +124,25 @@ for result in results:
 
 # **TIP:** Target `GuestFistName` and `GuestLastName` columns and combine them to get `Guest_Name`. Use the MySQL `CASE` function and create `Arrival_slot` for each guest.  
 # Add your code here
+try:
+    sql_query_task4 = """
+    SELECT BookingID, CONCAT(GuestFirstName, ' ', GuestLastName) AS Guest_Name,
+    CASE
+        WHEN HOUR(BookingSlot) IN (15, 16) THEN 'Late afternoon'
+        WHEN HOUR(BookingSlot) IN (17, 18) THEN 'Evening'
+        WHEN HOUR(BookingSlot) IN (19, 20) THEN 'Night'
+        ELSE 'Other'
+    END AS Arrival_slot
+    FROM Bookings;
+    """
+
+    cursor.execute(sql_query_task4)
+    results_task4 = cursor.fetchall()
+
+    # Print the results for Task 4
+    print("Arrival Slots:")
+    for result in results_task4:
+        print("BookingID:", result[0], "Guest_Name:", result[1], "Arrival_slot:", result[2])
+
+except mysql.connector.Error as e:
+    print(e)
